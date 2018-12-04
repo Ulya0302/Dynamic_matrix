@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 public class DynamicMatrix<T>
 {
     public List<List<T>> Matrix { get; }
-    public int Length { get { return lines * columns; } }
-    private int lines = 0, columns = 0;
+    public int Count { get { return lineCount * columnCount; } }
+
+    private int lineCount = 0, columnCount = 0;
 
     public T this[int i, int j]
     {
@@ -33,15 +34,28 @@ public class DynamicMatrix<T>
         }
     }
 
-    public void AddRow(params T[] line) { }
+    public void AddRow(params T[] line)
+    {
+        Matrix.Add(new List<T>());
+        for (int i = 0; i < line.Length; i++)
+            Matrix[lineCount].Add(line[i]);
+        if (line.Length < columnCount)       
+            for (int i = line.Length; i < columnCount; i++)
+                Matrix[lineCount].Add(line[i]);
+        else if (line.Length > columnCount)
+        {
+            for (int i = 0; i < lineCount; i++)
+
+        }
+    }
     public void AddColumn(params T[] col) { }
     public void InsertRow(int numb, params T[] line) { }
     public int GetLength(int i)
     {
         if (i == 0)
-            return lines;
+            return lineCount;
         else if (i == 1)
-            return columns;
+            return columnCount;
         else
             return -1;
     }
