@@ -7,25 +7,25 @@ using System.Threading.Tasks;
 
 public class DynamicMatrix<T>
 {
-    public List<List<T>> Matrix { get; }
+    private List<List<T>> matrix;
     public int Count { get { return lineCount * columnCount; } }
 
     private int lineCount = 0, columnCount = 0;
 
     public T this[int i, int j]
     {
-        get { return Matrix[i][j]; }
-        set { Matrix[i][j] = value; }
+        get { return matrix[i][j]; }
+        set { matrix[i][j] = value; }
     }
 
     public List<T> this[int i]
     {
-        get { return Matrix[i]; }
+        get { return matrix[i]; }
         set
         {
             if (lineCount != value.Count)
                 throw new Exception("Unavailable length of argument");
-            Matrix[i] = value;
+            matrix[i] = value;
         }
     }
 
@@ -33,12 +33,12 @@ public class DynamicMatrix<T>
     {
         if ((i <= 0) || (j <= 0))
             throw new Exception("Unavailable size of matrix");
-        Matrix = new List<List<T>>(i);
+        matrix = new List<List<T>>(i);
         for (int k1 = 0; k1 < i; k1++)
         {
-            Matrix.Add(new List<T>());
+            matrix.Add(new List<T>());
             for (int k2 = 0; k2 < j; k2++)
-                Matrix[k1].Add(default(T));
+                matrix[k1].Add(default(T));
         }
         lineCount = i;
         columnCount = j;
@@ -58,18 +58,18 @@ public class DynamicMatrix<T>
     {
         if ((index < 0) || (index > lineCount))
             throw new Exception("Unavailable index");
-        Matrix.Insert(index, new List<T>());
+        matrix.Insert(index, new List<T>());
         for (int i = 0; i < line.Length; i++)
-            Matrix[index].Add(line[i]);
+            matrix[index].Add(line[i]);
         if (line.Length < columnCount)
             for (int i = line.Length; i < columnCount; i++)
-                Matrix[index].Add(default(T));
+                matrix[index].Add(default(T));
         else if (line.Length > columnCount)
         {
-            for (int i = 0; i < lineCount; i++)
+            for (int i = 0; i <= lineCount; i++)
                 if (i != index)
                     for (int j = columnCount; j < line.Length; j++)
-                        Matrix[i].Add(default(T));
+                        matrix[i].Add(default(T));
             columnCount += (line.Length - columnCount);
         }
         lineCount++;
@@ -81,25 +81,25 @@ public class DynamicMatrix<T>
             throw new Exception("Unavailable index");
         if (lineCount == col.Length)
             for (int i = 0; i < col.Length; i++)
-                Matrix[i].Insert(index, col[i]);
+                matrix[i].Insert(index, col[i]);
         else if (lineCount > col.Length)
         {
             for (int i = 0; i < col.Length; i++)
-                Matrix[i].Insert(index, col[i]);
+                matrix[i].Insert(index, col[i]);
             for (int i = col.Length; i < lineCount; i++)
-                Matrix[i].Insert(index, default(T));
+                matrix[i].Insert(index, default(T));
         }
         else
         {
             for (int i = 0; i < lineCount; i++)
-                Matrix[i].Insert(index, col[i]);
+                matrix[i].Insert(index, col[i]);
             for (int i = lineCount; i < col.Length; i++)
             {
-                Matrix.Add(new List<T>());
+                matrix.Add(new List<T>());
                 lineCount++;
                 for (int j = 0; j < columnCount; j++)
-                    Matrix[i].Add(default(T));
-                Matrix[i].Insert(index, col[i]);
+                    matrix[i].Add(default(T));
+                matrix[i].Insert(index, col[i]);
             }
         }
         columnCount++;
@@ -120,7 +120,7 @@ public class DynamicMatrix<T>
     {
         if (ind < 0 || ind >= lineCount)
             throw new Exception("Unavailable index");
-        Matrix.RemoveAt(ind);
+        matrix.RemoveAt(ind);
         lineCount--;
     }
 
@@ -129,7 +129,7 @@ public class DynamicMatrix<T>
         if (ind < 0 || ind >= columnCount)
             throw new Exception("Unavailable index");
         for (int i = 0; i < lineCount; i++)         
-            Matrix[i].RemoveAt(ind); ;
+            matrix[i].RemoveAt(ind); ;
         columnCount--;
     }
 
@@ -137,7 +137,7 @@ public class DynamicMatrix<T>
     {
         String[] s = new String[lineCount];
         for (int i = 0; i < lineCount; i++)
-            s[i] = String.Join(" ", Matrix[i]);
+            s[i] = String.Join(" ", matrix[i]);
         return String.Join("\n", s);       
     }
 }
