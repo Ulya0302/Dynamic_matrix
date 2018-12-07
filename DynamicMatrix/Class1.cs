@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 public class DynamicMatrix<T>
@@ -44,9 +41,9 @@ public class DynamicMatrix<T>
         columnCount = j;
     }
 
-    public void AddRow(params T[] line)
+    public void AddLine(params T[] line)
     {
-        this.InsertRow(lineCount, line);
+        this.InsertLine(lineCount, line);
     }
 
     public void AddColumn(params T[] col)
@@ -54,7 +51,7 @@ public class DynamicMatrix<T>
         this.InsertCol(columnCount, col);
     }
 
-    public void InsertRow(int index, params T[] line)
+    public void InsertLine(int index, params T[] line)
     {
         if ((index < 0) || (index > lineCount))
             throw new Exception("Unavailable index");
@@ -133,6 +130,9 @@ public class DynamicMatrix<T>
         columnCount--;
     }
 
+    //If you want to print matrix, you should use Print()  
+    //Extremely undesirable use this method for printing
+    //Because there is not formating
     public override String ToString()
     {
         String[] s = new String[lineCount];
@@ -140,5 +140,14 @@ public class DynamicMatrix<T>
             s[i] = String.Join(" ", matrix[i]);
         return String.Join("\n", s);       
     }
+
+    public void Print()
+    {
+        for (int i = 0; i < lineCount; i++, Console.WriteLine())
+            for (int j = 0; j < columnCount; Console.Write($"{this[i, j],3} "), j++ ) ;
+
+    }
+
+    
 }
 
